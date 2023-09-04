@@ -1,0 +1,36 @@
+version: 2
+sources:
+  - name: scholar
+    description: source gg_scholar data
+    database: pc_dbt_db
+    schema: gg_scholar
+    tables:
+      - name: gg_scholar_list
+        description: Macquarie University scholar profiles
+
+        columns:
+          - name: author_id
+            description: The primary key for this table
+            tests:
+              - unique
+              - not_null
+
+      - name: gg_scholar_citation
+        description: Citation information by year
+        columns:
+          - name: author_id
+            description: Foreign Key to author_id.gg_scholar_list
+            tests:
+              - relationships:
+                  to: source('pc_dbt_db', 'gg_scholar_list')
+                  field: author_id
+
+      - name: gg_scholar_metrices
+        description: H-index, I10-index annd citation information (all, since 2018)
+        columns:
+          - name: author_id
+            description: Foreign Key to author_id.gg_scholar_list
+            tests:
+              - relationships:
+                  to: source('pc_dbt_db', 'gg_scholar_list')
+                  field: author_id
